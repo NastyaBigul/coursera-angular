@@ -30,9 +30,10 @@ NarrowItDownController.$inject = ['MenuSearchService'];
 function NarrowItDownController(MenuSearchService) {
     var menu = this;
     var foundItems = [];
-    var searchTerm = "";
+    //var searchTerm = "";
     
     menu.check = function(searchTerm) {
+      console.log("11");
     	var promise = MenuSearchService.getMenuCategories();
 
 	    promise.then(function (response) {
