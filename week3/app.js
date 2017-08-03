@@ -31,7 +31,8 @@ function NarrowItDownController(MenuSearchService) {
     var menu = this;
     var foundItems = [];
     var searchTerm = "";
-    //this.method = function(searchTerm) {
+    
+    menu.check = function(searchTerm) {
     	var promise = MenuSearchService.getMenuCategories();
 
 	    promise.then(function (response) {
@@ -47,7 +48,7 @@ function NarrowItDownController(MenuSearchService) {
 	    console.log("foundItems: ");
 	    console.log(foundItems);
 	    });
-	//};
+	};
     
 }
 
