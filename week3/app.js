@@ -3,108 +3,83 @@
 
 angular.module('NarrowItDownApp', [])
 .controller('NarrowItDownController', NarrowItDownController)
-.service('MenuSearchService', MenuSearchService)
+.factory('MenuSearchFactory', MenuSearchFactory)
 .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com")
-.directive('listItem', ListItemDescription)
+.directive('foundItems', ListItemDescription)
 ;
 
 //FoundItemsDirective.$inject = [];
 function ListItemDescription() {
   var ddo = {
     scope: {
-      ctrl: '=found',
-      //searchTerm: '='
+      //ctrl: '=found',
+      //search: '@search'
       //myMethod: '&method'
-    },
-    templateUrl: 'itemsloaderindicator.html'/*,
+      items: '<'
+    },/*
+    templateUrl: 'itemsloaderindicator.html',*/
     controller: NarrowItDownController,
     bindToController: true,
-    controllerAs: 'myCtrl'*/
-    //template: '<li>  ({{ category.id }}) {{ category.name }} </li>'
+    controllerAs: 'myCtrl',
+    template: '({{ category.id }}) {{ category.name }}'
   };
   return ddo;
 }
 
 
-NarrowItDownController.$inject = ['MenuSearchService'];
-function NarrowItDownController(MenuSearchService) {
-    var menu = this;
-    var foundItems = [];
-    //var searchTerm = "";
-    
-    menu.check = function(searchTerm) {
-      console.log("11");
-    	var promise = MenuSearchService.getMenuCategories();
+NarrowItDownController.$inject = ['MenuSearchFactory'];
+function NarrowItDownController(MenuSearchFactory) {
+  var menu = this;
 
-	    promise.then(function (response) {
-	      // process result and only keep items that match
-	    for (var i = 0; i < response.data.menu_items.length; i++) {
-	      var description = response.data.menu_items[i].description;
-	      if (description.toLowerCase().indexOf(searchTerm) !== -1) {
-	        foundItems[i] = response.data.menu_items[i];
-	      }
-	    }
-	    menu.categories = foundItems;
-	    // return processed items
-	    console.log("foundItems: ");
-	    console.log(foundItems);
-	    });
-	};
+  var menuList = MenuSearchFactory();
+
+  menu.items = menuList.getItems();
+  menu.searchTerm = "";
+
+  menu.getMenuCategories = function () {
+    menuList.getMenuCategories(menu.searchTerm);
+  };
     
 }
 
 
 MenuSearchService.$inject = ['$http', 'ApiBasePath'];
 function MenuSearchService($http, ApiBasePath) {
-    var service = this;
+  var service = this;
+  
+  var foundItems = [];
 
-    service.getMenuCategories = function () {
-      var response = $http({
-        method: "GET",
-        url: (ApiBasePath + "/menu_items.json")
-      });
-
-      console.log(response);
-      return response;
-    };
-
-}
-/*
-NarrowItDownController.$inject = ['MenuSearchService'];
-function NarrowItDownController(MenuSearchService) {
-    var menu = this;
-    var searchTerm = "";
-    var found = MenuSearchService.getMenuCategories(searchTerm);
-    console.log(found);
-    //console.log("MenuSearchService.getMenuCategories(searchTerm).$$state.value");
-    //console.log(MenuSearchService.getMenuCategories(searchTerm));
-}
-
-
-MenuSearchService.$inject = ['$http', 'ApiBasePath'];
-function MenuSearchService($http, ApiBasePath) {
-    var service = this;
-
-    service.getMenuCategories = function (searchTerm) {
-      return $http({
-              method: "GET",
-              url: (ApiBasePath + "/menu_items.json")
-            })
-      .then(function (response) {
+  service.getMenuCategories = function (searchTerm) {
+    var response = $http({
+      method: "GET",
+      url: (ApiBasePath + "/menu_items.json")
+    })
+    .then(function (response) {
         // process result and only keep items that match
-        var foundItems = [];
-        for (var i = 0; i < response.data.menu_items.length; i++) {
+      for (var i = 0; i < response.data.menu_items.length; i++) {
         var description = response.data.menu_items[i].description;
         if (description.toLowerCase().indexOf(searchTerm) !== -1) {
-          foundItems[i] = response.data.menu_items[i];
+          foundItems.push(response.data.menu_items[i]);
+            //foundItems[i] = response.data.menu_items[i];
         }
-      }
-      // return processed items
-      //console.log("foundItems: ");
-      console.log(foundItems);
-        return foundItems;
+      };
     });
-    };
- }
-*/
+    console.log(foundItems);
+    //return foundItems;
+  };
+
+  service.getItems = function () {
+    return foundItems;
+  };
+
+}
+
+function MenuSearchFactory() {
+  var factory = function (searchTerm) {
+    return new MenuSearchService(searchTerm);
+  };
+
+  return factory;
+}
+
 })()

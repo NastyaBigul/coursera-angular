@@ -13,19 +13,24 @@
     <h1>Narrow Down Your Chinese Menu Choice</h1>
 
     <div class="form-group">
-      <input ng-model="ctrl.searchTerm" type="text" placeholder="search term" class="form-control" value="chicken">
+      <input ng-model="ctrl.serchItem" type="text" placeholder="search term" class="form-control" value="chicken"> <!---->
     </div>
     <div class="form-group narrow-button">
-      <button ng-click="ctrl.check(ctrl.searchTerm)" class="btn btn-primary">Narrow It Down For Me!</button>
+      <button ng-click="ctrl.getMenuCategories(list.searchTerm)" class="btn btn-primary">Narrow It Down For Me!</button> <!--ng-click="ctrl.check(ctrl.searchTerm)"--> 
     </div></br>
 
     <div>
-      {{ctrl.found[1].description}}
 
       <div ng-controller='NarrowItDownController as ctrl'>
         <h3>List of Menu Categories</h3>
         
-        <list-item ctrl='found'> </list-item>
+        
+        
+        <ul>
+          <li ng-repeat="category in ctrl.categories"> 
+            <found-items > {{search}}</found-items>
+          </li>
+        </ul>
         <!--
         <my-directive method="ctrl.method(myArg)"></my-directive>
         <button ng-click="ctrl.myMethod({myArg: ''})"> do it! </button>-->
@@ -33,8 +38,8 @@
 
     </div>
 
-     <!--found-items should be implemented as a component -->
-    <found-items found-items="...." on-remove="...."></found-items>
+     <!--found-items should be implemented as a component 
+    <found-items found-items="...." on-remove="...."></found-items>-->
   </div>
 
 </body>
