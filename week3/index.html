@@ -24,9 +24,8 @@
 
       <div ng-controller='NarrowItDownController as ctrl'>
         <h3>List of Menu Categories</h3>
-        <ul>
-        <list-item ng-repeat="category in ctrl.categories"> </list-item>
-        </ul>
+        
+        <list-item ctrl='found'> </list-item>
         <!--
         <my-directive method="ctrl.method(myArg)"></my-directive>
         <button ng-click="ctrl.myMethod({myArg: ''})"> do it! </button>-->

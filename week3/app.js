@@ -11,11 +11,11 @@ angular.module('NarrowItDownApp', [])
 //FoundItemsDirective.$inject = [];
 function ListItemDescription() {
   var ddo = {
-    /*scope: {
-      //found: '=',
+    scope: {
+      ctrl: '=found',
       //searchTerm: '='
-      myMethod: '&method'
-    },*/
+      //myMethod: '&method'
+    },
     templateUrl: 'itemsloaderindicator.html'/*,
     controller: NarrowItDownController,
     bindToController: true,
